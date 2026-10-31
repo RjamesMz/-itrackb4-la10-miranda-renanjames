@@ -52,14 +52,16 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold" for="type">Type</label>
-                            <select id="type" name="type" class="form-select @error('type') is-invalid @enderror">
+                            <label class="form-label fw-semibold" for="type_id">Type</label>
+                            <select id="type_id" name="type_id" class="form-select @error('type_id') is-invalid @enderror">
                                 <option value="">Type of Medicine</option>
-                                <option value="Syrup" @selected(old('type') == 'Syrup')>Liquid</option>
-                                <option value="Tablet" @selected(old('type') == 'Tablet')>Tablet</option>
-                                <option value="Capsule" @selected(old('type') == 'Capsule')>Capsule</option>
+                                @foreach ($types as $type)
+                                    <option value="{{ $type->id }}"
+                                        @selected(old('type_id') == $type->id)
+                                    >{{ $type->name }}</option>
+                                @endforeach
                             </select>
-                            @error('type')
+                            @error('type_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

@@ -1,33 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Medicine;
+use App\Models\Type;
+
 
 class MedicineController extends Controller
 {
-
     public function index(Request $request)
     {
-       $type = $request->query('type');
+        $types = Type::all();
+        $type_id = $request->query('type_id');
 
-        $query = Medicine::query();
-
-        if ($type) {
-            $query = $query->where('type', $type);
+        $query = Medicine::with('type');
+        if ($type_id) {
+            $query = $query->where('type_id', $type_id);
         }
-
         $medicines = $query->get();
-         return view('medicines.index', compact('medicines'));
-     }
+        return view('medicines.index', compact('medicines', 'types'));
+    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('medicines.create');
+        $types = Type::all();
+        return view('medicines.create', compact('types'));
     }
 
     /**
@@ -36,12 +37,11 @@ class MedicineController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-
-        'name' => 'required|max:100',
-        'stock' => 'required|integer|min:1',
-        'expiry_date' => 'required',
-        'type' => 'required|max:100|in:Capsule,Tablet,Syrup',
-        'is_available' => 'required|boolean',
+            'name' => 'required|max:100',
+            'stock' => 'required|integer|min:1',
+            'expiry_date' => 'required',
+            'type_id' => 'required|exists:types,id',
+            'is_available' => 'required|boolean',
         ]);
 
         Medicine::create($validated);
@@ -57,9 +57,7 @@ class MedicineController extends Controller
     public function show($id = 5)
     {
         $medicines = Medicine::findOrFail($id);
-        return view('medicines.show', compact('medicines'));    
-       
-
+        return view('medicines.show', compact('medicines'));
     }
 
     /**
@@ -92,18 +90,18 @@ class MedicineController extends Controller
         $medicines = $this->medicines();
         $result = [];
 
-       foreach ($medicines as $medicine) {
-                if ($type == null) {
-                    $result[] = $medicine;
-                } elseif ($medicine['type'] == $type) {
-                    $result[] = $medicine;
-                }
+        foreach ($medicines as $medicine) {
+            if ($type == null) {
+                $result[] = $medicine;
+            } elseif ($medicine['type'] == $type) {
+                $result[] = $medicine;
             }
+        }
 
-            return view('medicines.filter', [
-                'medicines' => $result,
-                'filter' => $type,
-            ]);
+        return view('medicines.filter', [
+            'medicines' => $result,
+            'filter' => $type,
+        ]);
 
     }
 

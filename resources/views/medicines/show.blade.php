@@ -20,7 +20,7 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center py-3">
                     <span class="text-muted">Type</span>
-                    <span class="badge bg-info-subtle text-info-emphasis">{{ $medicines['type'] }}</span>
+                    <span class="badge bg-info-subtle text-info-emphasis">{{ $medicines->type->name }}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center py-3">
                     <span class="text-muted">Available</span>
