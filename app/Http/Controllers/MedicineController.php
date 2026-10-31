@@ -10,9 +10,17 @@ class MedicineController extends Controller
 
     public function index(Request $request)
     {
-        $medicines = Medicine::all();
-        return view('medicines.index', compact('medicines'));
-    }
+       $type = $request->query('type');
+
+        $query = Medicine::query();
+
+        if ($type) {
+            $query = $query->where('type', $type);
+        }
+
+        $medicines = $query->get();
+         return view('medicines.index', compact('medicines'));
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -30,27 +38,16 @@ class MedicineController extends Controller
         $validated = $request->validate([
 
         'name' => 'required|max:100',
-        'stock' => 'required|in:Lowstock,Full',
+        'stock' => 'required|integer|min:1',
         'expiry_date' => 'required',
         'type' => 'required|max:100|in:Capsule,Tablet,Syrup',
-        'available' => 'required| in:true,false'
+        'is_available' => 'required|boolean',
         ]);
 
-       $medicines = $this->medicines();
-       $id = max(array_keys($medicines)) + 1;
+        Medicine::create($validated);
 
-       $medicines[$id] = [
-        'id' => $id,
-        'name' => $request->input('name'),
-        'stock' => $request->input('stock'),
-        'expiry_date' => $request->input('expiry_date'),
-        'type' => $request->input('type'),
-        'is_available' => $request->input('is_available') === 'true',
-       ];
-
-       $this->saveMedicines($medicines);
-       return redirect()->route('medicines.index')
-       ->with('success', 'Medicine added succesfully');
+        return redirect()->route('medicines.index')
+            ->with('success', 'Medicine added successfully');
     }
 
 
@@ -112,5 +109,4 @@ class MedicineController extends Controller
 
 
 }
-
 

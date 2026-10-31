@@ -3,17 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Medicine extends Model
 {
-    protected $fillable = ['name', 'stock', 'expiry_date', 'type', 'is_available'];
- 
+    protected $fillable = [
+        'name',
+        'stock',
+        'expiry_date',
+        'type_id',
+        'is_available',
+    ];
+
     protected function casts(): array
     {
         return [
-            'is_available' => 'boolean',     // your boolean column
-            'stock' => 'integer',     // your integer column
-            'expiry_date' => 'integer',  // your integer column
+            'is_available' => 'boolean',
+            'stock' => 'integer',
+            'expiry_date' => 'date',
         ];
+    }
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(Type::class);
     }
 }

@@ -23,17 +23,24 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold" for="stock">Stock</label>
-                            <select id="stock" name="stock" class="form-select @error('stock') is-invalid @enderror">
-                                <option value="">Stock</option>
-                                <option value="Full" @selected(old('stock') == 'Full')>Full Stock</option>
-                                <option value="Lowstock" @selected(old('stock') == 'Lowstock')>Low Stock</option>
-                            </select>
+                            <label class="form-label fw-semibold" for="stock">Stock Quantity</label>
+                            <input
+                                type="number"
+                                id="stock"
+                                name="stock"
+                                class="form-control @error('stock') is-invalid @enderror"
+                                value="{{ old('stock') }}"
+                                placeholder="Enter stock quantity"
+                                min="0"
+                                step="1"
+                            >
                             @error('stock')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                    </div>
 
+                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold" for="expiry_date">Expiry Date</label>
                             <input type="date" id="expiry_date" name="expiry_date" class="form-control @error('expiry_date') is-invalid @enderror" value="{{ old('expiry_date') }}">
@@ -58,13 +65,18 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold" for="available">Available</label>
-                            <select id="available" name="available" class="form-select @error('available') is-invalid @enderror">
+                            <label class="form-label fw-semibold" for="is_available">Available</label>
+                            <select
+                                id="is_available"
+                                name="is_available"
+                                class="form-select @error('is_available') is-invalid @enderror"
+                            >
                                 <option value="">Medicine Status</option>
-                                <option value="true" @selected(old('available') == 'true')>Yes</option>
-                                <option value="false" @selected(old('available') == 'false')>No</option>
+                                <option value="1" @selected(old('is_available') == '1')>Yes</option>
+                                <option value="0" @selected(old('is_available') == '0')>No</option>
                             </select>
-                            @error('available')
+
+                            @error('is_available')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
